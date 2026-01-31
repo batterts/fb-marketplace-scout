@@ -125,7 +125,36 @@ function extractVehicleInfo(title, description) {
     }
   }
 
-  return { year, mileage, make, isVehicle: true };
+  // Extract model name from title (word after make, before trim/type)
+  let model = detectedModel ? detectedModel.charAt(0).toUpperCase() + detectedModel.slice(1) : null;
+
+  if (!model && make) {
+    // Try to extract model from title
+    const titleLower = title.toLowerCase();
+    const makePos = titleLower.indexOf(make.toLowerCase());
+
+    if (makePos >= 0) {
+      // Get text after make
+      const afterMake = title.substring(makePos + make.length).trim();
+
+      // Extract next 1-2 words as model (stop at trim level, year, or body type)
+      const modelMatch = afterMake.match(/^([a-z0-9\-]+(?:\s+[a-z0-9\-]+)?)/i);
+
+      if (modelMatch) {
+        let extractedModel = modelMatch[1].trim();
+
+        // Clean up - remove trim levels, body types, years
+        const stopWords = /\b(sedan|coupe|suv|truck|van|convertible|hatchback|wagon|pickup|4d|2d|lx|ex|se|le|limited|sport|base|premium|xlt|slt|sr5|hybrid|awd|4wd|fwd|rwd|automatic|manual|v6|v8|4cyl|turbo)\b/i;
+        const cleanModel = extractedModel.split(/\s+/).filter(word => !stopWords.test(word) && !/^\d{4}$/.test(word)).join(' ');
+
+        if (cleanModel.length > 0) {
+          model = cleanModel.charAt(0).toUpperCase() + cleanModel.slice(1).toLowerCase();
+        }
+      }
+    }
+  }
+
+  return { year, mileage, make, model, isVehicle: true };
 }
 
 // Detect vehicle condition issues
