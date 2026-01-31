@@ -2,6 +2,10 @@
 
 AI-powered evaluation tool for Facebook Marketplace listings. Instantly scores flip potential, weirdness, and scam risk. Includes vehicle pricing intelligence with automatic comparable searches.
 
+<img width="1507" height="945" alt="image" src="https://github.com/user-attachments/assets/1b967e93-835b-49f6-8131-02064b012332" />
+
+<img width="1282" height="912" alt="image" src="https://github.com/user-attachments/assets/05b40ad7-d9c0-4bdb-970a-78011f2a3882" />
+
 ---
 
 ## Quick Start

@@ -52,6 +52,16 @@ if [ -n "$SCOUT_BROWSER_PIDS" ]; then
     echo -e "${GREEN}✅ Scout Browser cleaned up${NC}"
 fi
 
+# Close Chrome browsers using Scout profile
+CHROME_SCOUT_PIDS=$(pgrep -f "\.fb-marketplace-scout-profile" 2>/dev/null || true)
+if [ -n "$CHROME_SCOUT_PIDS" ]; then
+    echo -e "${BLUE}Closing Chrome browsers with Scout profile...${NC}"
+    pkill -f "\.fb-marketplace-scout-profile" || true
+    # Give Chrome time to cleanup
+    sleep 1
+    echo -e "${GREEN}✅ Chrome browsers closed${NC}"
+fi
+
 echo ""
 echo -e "${GREEN}✅ Scout stopped completely${NC}"
 echo ""
