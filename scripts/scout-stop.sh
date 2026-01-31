@@ -11,7 +11,8 @@ NC='\033[0m'
 
 echo -e "${BLUE}🛑 Stopping Scout...${NC}"
 
-cd "$(dirname "$0")"
+# Change to project root (script is in scripts/ subdirectory)
+cd "$(dirname "$0")/.."
 
 # Determine docker-compose command
 if command -v docker-compose &> /dev/null; then
@@ -36,6 +37,22 @@ if [ -f .scout-agent.pid ]; then
     fi
 fi
 
-echo -e "${GREEN}✅ Scout stopped${NC}"
+# Cleanup any remaining scout processes
+SCOUT_AGENT_PIDS=$(pgrep -f "scout-agent.js" 2>/dev/null || true)
+if [ -n "$SCOUT_AGENT_PIDS" ]; then
+    echo -e "${BLUE}Stopping remaining Scout Agent processes...${NC}"
+    pkill -f "scout-agent.js" || true
+    echo -e "${GREEN}✅ Scout Agent cleaned up${NC}"
+fi
+
+SCOUT_BROWSER_PIDS=$(pgrep -f "scout-browser.js" 2>/dev/null || true)
+if [ -n "$SCOUT_BROWSER_PIDS" ]; then
+    echo -e "${BLUE}Stopping Scout Browser processes...${NC}"
+    pkill -f "scout-browser.js" || true
+    echo -e "${GREEN}✅ Scout Browser cleaned up${NC}"
+fi
+
+echo ""
+echo -e "${GREEN}✅ Scout stopped completely${NC}"
 echo ""
 echo -e "${YELLOW}To start again, run:${NC} ./scout.sh"
