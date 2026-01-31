@@ -16,6 +16,7 @@ function initComparableDB() {
         make TEXT,
         model TEXT,
         prices TEXT,
+        listings TEXT,
         median_price INTEGER,
         sample_count INTEGER,
         min_price INTEGER,
