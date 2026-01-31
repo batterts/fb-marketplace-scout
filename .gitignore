@@ -1,8 +1,10 @@
 # Database (local user data - don't commit)
 marketplace.db
 marketplace.db-journal
+marketplace.db.bak
 *.db
 *.db-journal
+*.db.bak
 *.sqlite
 *.sqlite3
 
