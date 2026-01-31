@@ -43,7 +43,7 @@ node scout-browser.js --test
 🚀 Launching FB Marketplace Scout...
 
 ✅ Browser launched with Scout enabled
-💾 Session saved to: /Users/shaun.batterton/.fb-marketplace-scout-profile
+💾 Session saved to: ~/.fb-marketplace-scout-profile
 🧪 TEST MODE - Auto-navigating to a listing
 
    Navigating to: https://www.facebook.com/marketplace/item/1224354239639774/

@@ -88,7 +88,7 @@ But for normal browsing, you don't need it anymore!
 ## Try It Now
 
 ```bash
-cd /Users/shaun.batterton/code/fb-marketplace-scout
+cd /path/to/fb-marketplace-scout
 ./start-scout.sh
 ```
 

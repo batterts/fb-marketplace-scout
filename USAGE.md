@@ -12,7 +12,7 @@ Scout has two main components that work together:
 ### Terminal 1: Start the Watcher
 
 ```bash
-cd /Users/shaun.batterton/code/fb-marketplace-scout
+cd /path/to/fb-marketplace-scout
 ./run.sh
 ```
 
@@ -26,7 +26,7 @@ cd /Users/shaun.batterton/code/fb-marketplace-scout
 ### Terminal 2: Start the Evaluator
 
 ```bash
-cd /Users/shaun.batterton/code/fb-marketplace-scout
+cd /path/to/fb-marketplace-scout
 ./run-evaluator.sh
 ```
 

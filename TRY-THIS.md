@@ -8,7 +8,7 @@ Since the Playwright scripts aren't working, I created a **bookmarklet approach*
 
 Open **Terminal 1:**
 ```bash
-cd /Users/shaun.batterton/code/fb-marketplace-scout
+cd /path/to/fb-marketplace-scout
 source venv/bin/activate
 python3 server.py
 ```
@@ -26,7 +26,7 @@ You should see:
 
 Open **Terminal 2:**
 ```bash
-cd /Users/shaun.batterton/code/fb-marketplace-scout
+cd /path/to/fb-marketplace-scout
 ./run-evaluator.sh
 ```
 

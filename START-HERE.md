@@ -17,7 +17,7 @@ A complete Facebook Marketplace monitoring system using **working Puppeteer** (N
 
 Open **Terminal 1**:
 ```bash
-cd /Users/shaun.batterton/code/fb-marketplace-scout
+cd /path/to/fb-marketplace-scout
 ./start-scout.sh
 ```
 

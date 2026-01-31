@@ -18,7 +18,7 @@ No more Playwright injection issues!
 
 **Terminal 1:**
 ```bash
-cd /Users/shaun.batterton/code/fb-marketplace-scout
+cd /path/to/fb-marketplace-scout
 source venv/bin/activate
 python3 server.py
 ```
@@ -29,7 +29,7 @@ Leave this running. It provides evaluation data on `http://localhost:8765`.
 
 **Terminal 2:**
 ```bash
-cd /Users/shaun.batterton/code/fb-marketplace-scout
+cd /path/to/fb-marketplace-scout
 ./run-evaluator.sh
 ```
 
@@ -131,7 +131,7 @@ javascript:(function(){const url=window.location.href;if(!url.includes('/marketp
 
 Server not running. Start it:
 ```bash
-cd /Users/shaun.batterton/code/fb-marketplace-scout
+cd /path/to/fb-marketplace-scout
 source venv/bin/activate
 python3 server.py
 ```
@@ -158,12 +158,12 @@ Facebook changed their HTML. The bookmarklet tries to find the longest text bloc
 
 ```bash
 # Start server (Terminal 1)
-cd /Users/shaun.batterton/code/fb-marketplace-scout
+cd /path/to/fb-marketplace-scout
 source venv/bin/activate
 python3 server.py
 
 # Start evaluator (Terminal 2)
-cd /Users/shaun.batterton/code/fb-marketplace-scout
+cd /path/to/fb-marketplace-scout
 ./run-evaluator.sh
 
 # Browse Marketplace

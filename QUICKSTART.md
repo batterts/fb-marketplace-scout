@@ -3,7 +3,7 @@
 ## 1. Install
 
 ```bash
-cd /Users/shaun.batterton/code/fb-marketplace-scout
+cd /path/to/fb-marketplace-scout
 ./setup.sh
 ```
 
