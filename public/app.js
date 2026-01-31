@@ -44,7 +44,10 @@ document.getElementById('launch-form').addEventListener('submit', async (e) => {
     const data = await response.json();
 
     if (data.success) {
-      statusEl.textContent = `✅ Browser launched${query ? ` with "${query}"` : ''}`;
+      statusEl.innerHTML = `
+        <strong>✅ Browser Launched!</strong><br>
+        ${data.message || 'Chrome should open automatically. Click on any listing to see AI evaluation overlay.'}
+      `;
       statusEl.className = 'status-message success show';
     } else {
       throw new Error('Launch failed');
@@ -56,7 +59,7 @@ document.getElementById('launch-form').addEventListener('submit', async (e) => {
 
   setTimeout(() => {
     statusEl.classList.remove('show');
-  }, 5000);
+  }, 10000); // 10 seconds to read instructions
 });
 
 // Inventory: Load makes

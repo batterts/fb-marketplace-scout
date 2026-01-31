@@ -162,15 +162,36 @@ app.post('/api/launch', async (req, res) => {
   try {
     const { category } = req.body;
 
-    // Launch the scout browser with category
-    exec(`node scout-browser.js "${category || ''}"`, (error, stdout, stderr) => {
-      if (error) {
-        console.error(`Launch error: ${error}`);
+    console.log(`🚀 Launching browser for category: "${category || 'all'}"`);
+
+    // Launch the scout browser with category (in background)
+    const process = exec(
+      `node scout-browser.js "${category || ''}"`,
+      { cwd: __dirname },
+      (error, stdout, stderr) => {
+        if (error) {
+          console.error(`❌ Browser error: ${error.message}`);
+        }
+        if (stderr) {
+          console.error(`⚠️  Browser stderr: ${stderr}`);
+        }
       }
-      console.log(stdout);
+    );
+
+    // Stream output to server console
+    process.stdout.on('data', (data) => {
+      console.log(`[Browser] ${data.toString().trim()}`);
     });
 
-    res.json({ success: true, category });
+    process.stderr.on('data', (data) => {
+      console.error(`[Browser Error] ${data.toString().trim()}`);
+    });
+
+    res.json({
+      success: true,
+      category: category || 'all',
+      message: 'Browser launched! It should open automatically. Click on any FB Marketplace listing to see evaluation overlay.'
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
