@@ -128,6 +128,7 @@ app.get('/api/comparables/:year/:make/:model', async (req, res) => {
         make,
         model,
         prices: JSON.parse(data.prices),
+        listings: data.listings ? JSON.parse(data.listings) : [],
         median: data.median_price,
         min: data.min_price,
         max: data.max_price,

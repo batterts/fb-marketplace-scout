@@ -298,14 +298,15 @@ function saveComparableData(year, make, model, data) {
 
     db.run(`
       INSERT OR REPLACE INTO comparable_pricing
-      (search_key, year, make, model, prices, median_price, sample_count, min_price, max_price, last_updated)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
+      (search_key, year, make, model, prices, listings, median_price, sample_count, min_price, max_price, last_updated)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
     `, [
       searchKey,
       year,
       make,
       model,
       JSON.stringify(data.prices),
+      JSON.stringify(data.listings),
       data.median,
       data.count,
       data.min,
@@ -338,6 +339,7 @@ function getCachedComparableData(year, make, model) {
       } else if (row) {
         resolve({
           prices: JSON.parse(row.prices),
+          listings: row.listings ? JSON.parse(row.listings) : [],
           median: row.median_price,
           min: row.min_price,
           max: row.max_price,

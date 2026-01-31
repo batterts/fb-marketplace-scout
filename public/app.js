@@ -280,19 +280,46 @@ async function loadComparables(year, make, model) {
       }
     });
 
-    // Show individual prices
+    // Show individual listings
     const comparablesList = document.getElementById('comparables-list');
     comparablesList.innerHTML = '<h3>Individual Comparables</h3>';
 
-    data.prices.forEach((price, i) => {
-      const item = document.createElement('div');
-      item.className = 'comparable-item';
-      item.innerHTML = `
-        <span class="price">$${price.toLocaleString()}</span>
-        <span class="details">Listing ${i + 1}</span>
-      `;
-      comparablesList.appendChild(item);
-    });
+    if (data.listings && data.listings.length > 0) {
+      // Display actual listings with details
+      data.listings.forEach((listing, i) => {
+        const item = document.createElement('div');
+        item.className = 'comparable-item';
+
+        const location = listing.location || 'Unknown location';
+        const mileage = listing.mileage || 'N/A';
+        const description = listing.description || listing.text?.substring(0, 100) || '';
+
+        item.innerHTML = `
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 15px;">
+            <div style="flex: 1;">
+              <div class="price" style="margin-bottom: 5px;">$${listing.price.toLocaleString()}</div>
+              <div class="details" style="font-size: 0.9em; color: #888;">
+                📍 ${location} • 🚗 ${mileage}
+              </div>
+              ${description ? `<div style="font-size: 0.85em; margin-top: 5px; color: #aaa;">${description}</div>` : ''}
+            </div>
+            ${listing.url ? `<a href="${listing.url}" target="_blank" class="btn" style="padding: 6px 12px; font-size: 0.85em;">View →</a>` : ''}
+          </div>
+        `;
+        comparablesList.appendChild(item);
+      });
+    } else {
+      // Fallback to just prices if no listing data
+      data.prices.forEach((price, i) => {
+        const item = document.createElement('div');
+        item.className = 'comparable-item';
+        item.innerHTML = `
+          <span class="price">$${price.toLocaleString()}</span>
+          <span class="details">Listing ${i + 1}</span>
+        `;
+        comparablesList.appendChild(item);
+      });
+    }
 
   } catch (err) {
     console.error('Error loading comparables:', err);
