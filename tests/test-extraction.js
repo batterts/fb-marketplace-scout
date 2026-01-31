@@ -62,7 +62,7 @@ function extractVehicleInfo(title, description) {
         let extractedModel = modelMatch[1].trim();
 
         // Clean up - remove trim levels, body types, years
-        const stopWords = /\b(sedan|coupe|suv|truck|van|convertible|hatchback|wagon|pickup|roadster|4d|2d|lx|ex|se|le|limited|sport|base|premium|xlt|slt|sr5|hybrid|awd|4wd|fwd|rwd|automatic|manual|v6|v8|4cyl|turbo)\b/i;
+        const stopWords = /\b(sedan|coupe|suv|truck|van|convertible|hatchback|wagon|pickup|roadster|fastback|hardtop|4d|2d|lx|ex|se|le|limited|sport|base|premium|xlt|slt|sr5|hybrid|awd|4wd|fwd|rwd|automatic|manual|v6|v8|4cyl|6cyl|turbo|diesel)\b/i;
         const cleanModel = extractedModel.split(/\s+/).filter(word => !stopWords.test(word) && !/^\d{4}$/.test(word)).join(' ');
 
         if (cleanModel.length > 0) {
