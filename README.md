@@ -8,6 +8,10 @@ AI-powered evaluation tool for Facebook Marketplace listings. Instantly scores f
 
 <img width="1324" height="842" alt="image" src="https://github.com/user-attachments/assets/2ea96a70-6531-4fe4-8d2a-74d81336eae3" />
 
+### First Scam Warning!!!
+
+<img width="1498" height="944" alt="image" src="https://github.com/user-attachments/assets/79705c60-3292-4a6b-8908-c10996214f43" />
+
 ---
 
 ## Quick Start
