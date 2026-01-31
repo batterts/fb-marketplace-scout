@@ -35,6 +35,11 @@ screenshots/
 # Logs
 *.log
 logs/
+scout-agent.log
+
+# Process IDs
+*.pid
+.scout-agent.pid
 
 # OS
 .DS_Store

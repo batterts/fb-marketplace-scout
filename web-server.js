@@ -157,6 +157,13 @@ app.get('/api/inventory/:year/:make/:model/evaluations', async (req, res) => {
   }
 });
 
+// Detect if running in Docker
+const isDocker = process.env.DOCKER_ENV === 'true' ||
+                 require('fs').existsSync('/.dockerenv');
+
+// Scout Agent URL (runs on host for Docker)
+const AGENT_URL = 'http://host.docker.internal:3001';
+
 // Launch browser with category
 app.post('/api/launch', async (req, res) => {
   try {
@@ -164,34 +171,71 @@ app.post('/api/launch', async (req, res) => {
 
     console.log(`🚀 Launching browser for category: "${category || 'all'}"`);
 
-    // Launch the scout browser with category (in background)
-    const process = exec(
-      `node scout-browser.js "${category || ''}"`,
-      { cwd: __dirname },
-      (error, stdout, stderr) => {
-        if (error) {
-          console.error(`❌ Browser error: ${error.message}`);
+    // If running in Docker, use Scout Agent on host
+    if (isDocker) {
+      console.log('🐳 Running in Docker - using Scout Agent on host');
+
+      try {
+        const response = await fetch(`${AGENT_URL}/launch`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ category })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          console.log('✅ Browser launch request sent to host agent');
+          res.json({
+            success: true,
+            category: category || 'all',
+            message: 'Browser launched on your Mac! Click on any FB Marketplace listing to see evaluation overlay.',
+            via: 'host-agent'
+          });
+        } else {
+          throw new Error(data.error || 'Agent launch failed');
         }
-        if (stderr) {
-          console.error(`⚠️  Browser stderr: ${stderr}`);
-        }
+      } catch (agentErr) {
+        console.error('❌ Scout Agent connection failed:', agentErr.message);
+        console.error('   Make sure Scout Agent is running: node scout-agent.js');
+        res.status(503).json({
+          error: 'Scout Agent not running',
+          message: 'Please start Scout Agent on your Mac: node scout-agent.js'
+        });
       }
-    );
+    } else {
+      // Running natively - launch directly
+      console.log('💻 Running natively - launching browser directly');
 
-    // Stream output to server console
-    process.stdout.on('data', (data) => {
-      console.log(`[Browser] ${data.toString().trim()}`);
-    });
+      const process = exec(
+        `node scout-browser.js "${category || ''}"`,
+        { cwd: __dirname },
+        (error, stdout, stderr) => {
+          if (error) {
+            console.error(`❌ Browser error: ${error.message}`);
+          }
+          if (stderr) {
+            console.error(`⚠️  Browser stderr: ${stderr}`);
+          }
+        }
+      );
 
-    process.stderr.on('data', (data) => {
-      console.error(`[Browser Error] ${data.toString().trim()}`);
-    });
+      // Stream output to server console
+      process.stdout.on('data', (data) => {
+        console.log(`[Browser] ${data.toString().trim()}`);
+      });
 
-    res.json({
-      success: true,
-      category: category || 'all',
-      message: 'Browser launched! It should open automatically. Click on any FB Marketplace listing to see evaluation overlay.'
-    });
+      process.stderr.on('data', (data) => {
+        console.error(`[Browser Error] ${data.toString().trim()}`);
+      });
+
+      res.json({
+        success: true,
+        category: category || 'all',
+        message: 'Browser launched! Click on any FB Marketplace listing to see evaluation overlay.',
+        via: 'direct'
+      });
+    }
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

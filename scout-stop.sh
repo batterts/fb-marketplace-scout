@@ -20,8 +20,21 @@ else
     COMPOSE_CMD="docker compose"
 fi
 
-# Stop services
+# Stop Docker services
 $COMPOSE_CMD down
+
+# Stop Scout Agent if running
+if [ -f .scout-agent.pid ]; then
+    AGENT_PID=$(cat .scout-agent.pid)
+    if ps -p $AGENT_PID > /dev/null 2>&1; then
+        echo -e "${BLUE}Stopping Scout Agent (PID: $AGENT_PID)...${NC}"
+        kill $AGENT_PID
+        rm .scout-agent.pid
+        echo -e "${GREEN}✅ Scout Agent stopped${NC}"
+    else
+        rm .scout-agent.pid
+    fi
+fi
 
 echo -e "${GREEN}✅ Scout stopped${NC}"
 echo ""

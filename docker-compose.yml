@@ -35,6 +35,9 @@ services:
     environment:
       - NODE_ENV=production
       - OLLAMA_HOST=http://ollama:11434
+      - DOCKER_ENV=true
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       - ollama
     restart: unless-stopped

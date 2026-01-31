@@ -105,8 +105,18 @@ echo -e "${GREEN}╔════════════════════
 echo -e "${GREEN}║     ✅ Scout is Ready!               ║${NC}"
 echo -e "${GREEN}╚═══════════════════════════════════════╝${NC}"
 echo ""
+
+# Start Scout Agent on host (for browser launching)
+echo -e "${BLUE}🤖 Starting Scout Agent (for browser launching)...${NC}"
+node scout-agent.js > scout-agent.log 2>&1 &
+AGENT_PID=$!
+echo $AGENT_PID > .scout-agent.pid
+echo -e "${GREEN}✅ Scout Agent running (PID: $AGENT_PID)${NC}"
+
+echo ""
 echo -e "${BLUE}🌐 Web Interface:${NC} http://localhost:3000"
 echo -e "${BLUE}🤖 Ollama API:${NC}    http://localhost:11434"
+echo -e "${BLUE}🚀 Scout Agent:${NC}   http://localhost:3001"
 echo ""
 echo -e "${YELLOW}Opening browser...${NC}"
 
