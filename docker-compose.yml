@@ -31,7 +31,8 @@ services:
     volumes:
       - ./:/app
       - /app/node_modules
-      - ./marketplace.db:/app/marketplace.db
+      # Note: marketplace.db is already included via ./:/app mount
+      # Removed explicit mount to prevent Docker from creating directory
     environment:
       - NODE_ENV=production
       - OLLAMA_HOST=http://ollama:11434
