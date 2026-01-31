@@ -178,7 +178,9 @@ document.getElementById('model-select').addEventListener('change', async (e) => 
       card.className = 'result-card';
 
       const date = new Date(eval.evaluated_at).toLocaleDateString();
-      const price = eval.price ? `$${parseInt(eval.price).toLocaleString()}` : 'N/A';
+      // Strip $ and commas before parsing
+      const priceNum = eval.price ? parseInt(eval.price.replace(/[$,]/g, '')) : null;
+      const price = priceNum ? `$${priceNum.toLocaleString()}` : 'N/A';
 
       card.innerHTML = `
         <h4>${eval.title || 'Untitled'}</h4>

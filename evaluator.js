@@ -10,10 +10,13 @@ function extractVehicleInfo(title, description) {
   const text = `${title} ${description}`.toLowerCase();
 
   // Check if it's a vehicle listing
-  const carBrands = ['toyota', 'honda', 'ford', 'chevy', 'chevrolet', 'nissan', 'subaru',
-                     'mazda', 'hyundai', 'kia', 'bmw', 'mercedes', 'audi', 'volkswagen',
+  // IMPORTANT: Hyphenated brands MUST come before their short versions
+  const carBrands = ['mercedes-benz', 'rolls-royce', 'land rover', 'range rover', 'aston martin',
+                     'alfa romeo', 'toyota', 'honda', 'ford', 'chevy', 'chevrolet', 'nissan', 'subaru',
+                     'mazda', 'hyundai', 'kia', 'bmw', 'mercedes', 'audi', 'volkswagen', 'vw',
                      'jeep', 'dodge', 'ram', 'gmc', 'buick', 'cadillac', 'lexus', 'acura',
-                     'infiniti', 'volvo', 'tesla', 'mini'];
+                     'infiniti', 'volvo', 'tesla', 'mini', 'porsche', 'ferrari', 'lamborghini',
+                     'maserati', 'bentley', 'jaguar', 'lotus', 'mclaren', 'bugatti'];
 
   const carTypes = ['sedan', 'suv', 'truck', 'coupe', 'convertible', 'hatchback', 'van',
                     'minivan', 'wagon', 'crossover', 'pickup'];
@@ -119,7 +122,11 @@ function extractVehicleInfo(title, description) {
     // Fall back to searching for brand names
     for (const brand of carBrands) {
       if (text.includes(brand)) {
-        make = brand.charAt(0).toUpperCase() + brand.slice(1);
+        // Properly capitalize multi-word brands (Mercedes-Benz, Land Rover, etc.)
+        const separator = brand.includes('-') ? '-' : ' ';
+        make = brand.split(separator)
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(separator);
         break;
       }
     }
@@ -144,7 +151,7 @@ function extractVehicleInfo(title, description) {
         let extractedModel = modelMatch[1].trim();
 
         // Clean up - remove trim levels, body types, years
-        const stopWords = /\b(sedan|coupe|suv|truck|van|convertible|hatchback|wagon|pickup|4d|2d|lx|ex|se|le|limited|sport|base|premium|xlt|slt|sr5|hybrid|awd|4wd|fwd|rwd|automatic|manual|v6|v8|4cyl|turbo)\b/i;
+        const stopWords = /\b(sedan|coupe|suv|truck|van|convertible|hatchback|wagon|pickup|roadster|fastback|hardtop|4d|2d|lx|ex|se|le|limited|sport|base|premium|xlt|slt|sr5|hybrid|awd|4wd|fwd|rwd|automatic|manual|v6|v8|4cyl|6cyl|turbo|diesel)\b/i;
         const cleanModel = extractedModel.split(/\s+/).filter(word => !stopWords.test(word) && !/^\d{4}$/.test(word)).join(' ');
 
         if (cleanModel.length > 0) {
