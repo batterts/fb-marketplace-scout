@@ -1,0 +1,14 @@
+node_modules/
+npm-debug.log
+.git/
+.gitignore
+*.md
+!SCOUT-README.md
+.env
+.DS_Store
+debug-*.png
+*.db-journal
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/

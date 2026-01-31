@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  # Ollama service for local AI
+  ollama:
+    image: ollama/ollama:latest
+    container_name: scout-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    restart: unless-stopped
+    # GPU support (optional - will fall back to CPU if unavailable)
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all
+    #           capabilities: [gpu]
+    command: serve
+
+  # Scout web application
+  scout-web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    container_name: scout-web
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./:/app
+      - /app/node_modules
+      - ./marketplace.db:/app/marketplace.db
+    environment:
+      - NODE_ENV=production
+      - OLLAMA_HOST=http://ollama:11434
+    depends_on:
+      - ollama
+    restart: unless-stopped
+
+volumes:
+  ollama-data:

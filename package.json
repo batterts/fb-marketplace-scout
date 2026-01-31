@@ -1,0 +1,19 @@
+{
+  "name": "fb-marketplace-scout",
+  "version": "2.0.0",
+  "description": "Scout - FB Marketplace Intelligence Platform",
+  "main": "web-server.js",
+  "scripts": {
+    "start": "node web-server.js",
+    "browser": "node scout-browser.js",
+    "dev": "nodemon web-server.js"
+  },
+  "dependencies": {
+    "express": "^4.22.1",
+    "puppeteer": "^24.0.0",
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

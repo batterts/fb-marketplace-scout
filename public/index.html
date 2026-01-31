@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🚀 Scout - FB Marketplace Intelligence</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <h1>🚀 Scout</h1>
+      <p>Facebook Marketplace Intelligence Platform</p>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="tabs">
+      <button class="tab active" data-tab="browser">🔍 Launch Browser</button>
+      <button class="tab" data-tab="inventory">📊 Inventory</button>
+      <button class="tab" data-tab="analytics">📈 Analytics</button>
+    </nav>
+
+    <!-- Tab Content -->
+    <main>
+      <!-- Browser Launch Tab -->
+      <section id="browser-tab" class="tab-content active">
+        <div class="card">
+          <h2>Launch Marketplace Browser</h2>
+          <p>Select a category to browse Facebook Marketplace with AI-powered evaluation</p>
+
+          <form id="launch-form">
+            <div class="form-group">
+              <label for="category">Category</label>
+              <select id="category" name="category">
+                <option value="">All Categories</option>
+                <option value="vehicles">🚗 Vehicles</option>
+                <option value="property">🏠 Property Rentals</option>
+                <option value="marketplace">🛍️ Marketplace</option>
+                <option value="electronics">💻 Electronics</option>
+                <option value="apparel">👕 Apparel</option>
+                <option value="entertainment">🎮 Entertainment</option>
+                <option value="family">👶 Family</option>
+                <option value="hobbies">⚽ Hobbies</option>
+                <option value="home">🏡 Home & Garden</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="search">Search Query (optional)</label>
+              <input type="text" id="search" name="search" placeholder="e.g., 2019 Honda Accord">
+            </div>
+
+            <button type="submit" class="btn btn-primary">🚀 Launch Browser</button>
+          </form>
+
+          <div id="launch-status" class="status-message"></div>
+        </div>
+
+        <div class="card">
+          <h3>Recent Activity</h3>
+          <div id="recent-activity">
+            <p class="muted">No recent evaluations</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Inventory Tab -->
+      <section id="inventory-tab" class="tab-content">
+        <div class="card">
+          <h2>Inventory Browser</h2>
+          <p>Browse evaluated vehicles by make, model, and year</p>
+
+          <!-- Make selector -->
+          <div class="inventory-nav">
+            <div class="form-group">
+              <label for="make-select">Make</label>
+              <select id="make-select">
+                <option value="">Select Make...</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="year-select">Year</label>
+              <select id="year-select" disabled>
+                <option value="">Select Year...</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="model-select">Model</label>
+              <select id="model-select" disabled>
+                <option value="">Select Model...</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="inventory-results"></div>
+        </div>
+      </section>
+
+      <!-- Analytics Tab -->
+      <section id="analytics-tab" class="tab-content">
+        <div class="card">
+          <h2>Price Analytics</h2>
+          <div id="analytics-controls">
+            <p class="muted">Select a vehicle from the Inventory tab to view analytics</p>
+          </div>
+
+          <div id="analytics-charts">
+            <canvas id="price-chart"></canvas>
+          </div>
+
+          <div id="comparables-list"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
