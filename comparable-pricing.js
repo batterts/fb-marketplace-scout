@@ -1,5 +1,6 @@
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
+const { saveComparablesToEvaluations } = require('./save-comparables-to-evaluations.js');
 
 const DB_PATH = path.join(__dirname, 'marketplace.db');
 
@@ -369,6 +370,8 @@ async function getComparablePricing(browser, year, make, model) {
 
   if (fresh) {
     await saveComparableData(year, make, model, fresh);
+    // Also save individual comparable listings to evaluations table
+    await saveComparablesToEvaluations(year, make, model, fresh);
   }
 
   return fresh;
