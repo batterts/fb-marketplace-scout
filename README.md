@@ -1,245 +1,231 @@
 # 🚀 Scout - FB Marketplace Intelligence Platform
 
-AI-powered Facebook Marketplace analytics with price intelligence, comparable listings, and instant evaluation overlay.
-
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
-## ✨ Features
-
-### 🔍 Smart Browser with AI Overlay
-- Launch Chrome with integrated evaluation overlay
-- Get instant AI scores on any listing:
-  - **Flip Potential** (1-10): Resale value opportunity
-  - **Weirdness** (1-10): Unique/interesting factor
-  - **Scam Risk** (1-10): Warning signs detected
-- Click any listing for immediate analysis
-
-### 💰 Comparable Pricing (Vehicles)
-- Automatic market research for vehicles
-- Scrapes FB Marketplace for similar listings
-- Calculates median, min, max prices
-- Shows up to 12 clickable comparables in overlay
-- Persistent cache builds pricing database over time
-
-### 📊 Web Dashboard
-- **Inventory Browser**: Filter by Make → Year → Model
-- **Price Analytics**: Interactive distribution charts
-- **Evaluation History**: Track all analyzed listings
-- **Recent Activity**: See latest evaluations
-
-### 🤖 Multiple AI Engines
-1. **Anthropic Claude Haiku** - Cloud AI (requires API key)
-2. **Ollama** - Local privacy-focused AI
-3. **Heuristic Fallback** - Rule-based when AI unavailable
-
-## 🚀 Quick Start
-
-### Prerequisites
-- [Docker Desktop](https://www.docker.com/products/docker-desktop)
-- Node.js 18+ (for development)
-
-### Installation
-
-```bash
-# Clone repository
-git clone https://github.com/batterts/fb-marketplace-scout.git
-cd fb-marketplace-scout
-
-# Install dependencies
-npm install
-
-# Launch Scout
-./scout.sh
-```
-
-That's it! Scout will:
-1. ✅ Start Docker services (Ollama + Web Server)
-2. ✅ Open browser to http://localhost:3000
-3. ✅ Be ready to evaluate listings!
-
-## 📖 Usage
-
-### Launch Browser
-1. Open http://localhost:3000
-2. Select category (Vehicles, Electronics, etc.)
-3. Click **Launch Browser**
-4. Browse FB Marketplace normally
-5. Click any listing to see AI evaluation overlay
-
-### Browse Inventory
-1. Go to **Inventory** tab
-2. Select Make (Honda, Toyota, etc.)
-3. Select Year
-4. Select Model
-5. View all past evaluations
-
-### View Analytics
-1. Select vehicle from Inventory
-2. Switch to **Analytics** tab
-3. See price distribution chart
-4. View individual comparables
-5. Analyze market trends
-
-## 🏗️ Architecture
-
-```
-┌─────────────────────┐
-│   Web Interface     │  http://localhost:3000
-│  (Express + SQLite) │
-└──────────┬──────────┘
-           │
-           ├── Launch Browser ──► Puppeteer + Overlay
-           ├── API Endpoints ───► /api/inventory/*
-           └── Database ────────► marketplace.db
-                                   ├── evaluations
-                                   └── comparable_pricing
-
-┌─────────────────────┐
-│  Ollama (Local AI)  │  http://localhost:11434
-│   Mistral/Llama     │
-└─────────────────────┘
-```
-
-## 📁 Project Structure
-
-```
-fb-marketplace-scout/
-├── public/                 # Web UI
-│   ├── index.html         # Main dashboard
-│   ├── style.css          # Styling
-│   └── app.js             # Frontend logic
-├── scout-browser.js       # Puppeteer automation + overlay
-├── evaluator.js          # AI evaluation engine
-├── comparable-pricing.js  # FB scraper for comparables
-├── web-server.js         # Express API server
-├── docker-compose.yml    # Production deployment
-├── scout.sh              # Launcher script
-└── marketplace.db        # SQLite database
-```
-
-## 🔧 Configuration
-
-### Anthropic API Key (Optional)
-Create `.env` file:
-```bash
-ANTHROPIC_API_KEY=sk-ant-...
-```
-
-Without API key, Scout uses Ollama (local AI) automatically.
-
-### Change Search Radius
-Edit `comparable-pricing.js`:
-```javascript
-const searchURL = buildSearchURL(year, make, model, zipCode, 500);
-// Change 500 to your preferred miles
-```
-
-## 🐳 Docker Services
-
-### Ollama (Port 11434)
-- Local AI model server
-- Privacy-focused (no data sent to cloud)
-- Auto-downloads models on first use
-- CPU/GPU support
-
-### Scout Web (Port 3000)
-- Express.js API server
-- Web dashboard UI
-- SQLite database access
-
-## 📊 Database Schema
-
-### `evaluations` Table
-- Listing details (title, price, location)
-- AI scores (flip, weirdness, scam)
-- Vehicle info (year, make, model, mileage)
-- Evaluation notes and timestamp
-
-### `comparable_pricing` Table
-- Search key (year_make_model)
-- Price statistics (median, min, max)
-- Individual listing data with URLs
-- Last updated timestamp
-
-## 🛑 Stop Scout
-
-```bash
-./scout-stop.sh
-```
-
-Or:
-```bash
-docker-compose down
-```
-
-## 📸 Screenshots
-
-### Browser Overlay
-![Overlay showing flip score 8/10, weirdness 3/10, scam risk 2/10, with comparable listings]
-
-### Web Dashboard
-![Dashboard showing inventory browser with Honda → 2014 → Accord selections]
-
-### Price Analytics
-![Chart showing price distribution of 2014 Honda Accord comparables]
-
-## 🔒 Privacy
-
-- **All data stored locally** in SQLite (`marketplace.db`)
-- **Ollama runs offline** - no cloud AI required
-- **No telemetry** - Scout doesn't phone home
-- **Your database** - export/backup anytime
-
-## 🛠️ Development
-
-### Run without Docker
-```bash
-# Start Ollama
-ollama serve
-
-# Start web server
-node web-server.js
-
-# Open browser
-open http://localhost:3000
-```
-
-### Live Reload (Docker)
-```bash
-docker-compose -f docker-compose.dev.yml up
-```
-
-## 🤝 Contributing
-
-Contributions welcome! Please:
-1. Fork the repository
-2. Create feature branch (`git checkout -b feature/amazing`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing`)
-5. Open Pull Request
-
-## 📄 License
-
-MIT License - See [LICENSE](LICENSE) file
-
-## 🙏 Acknowledgments
-
-- Built with [Puppeteer](https://pptr.dev/) for browser automation
-- [Ollama](https://ollama.ai/) for local AI
-- [Anthropic Claude](https://anthropic.com/) for cloud AI
-- [Chart.js](https://www.chartjs.org/) for analytics visualization
-
-## 📚 Documentation
-
-- [SCOUT-README.md](SCOUT-README.md) - Detailed user guide
-- [ARCHITECTURE.md](ARCHITECTURE.md) - Technical architecture
-- [VEHICLE-VALUATION.md](VEHICLE-VALUATION.md) - Pricing algorithm
-
-## 🐛 Issues
-
-Found a bug? Have a feature request?
-[Open an issue](https://github.com/batterts/fb-marketplace-scout/issues)
+AI-powered evaluation tool for Facebook Marketplace listings. Instantly scores flip potential, weirdness, and scam risk. Includes vehicle pricing intelligence with automatic comparable searches.
 
 ---
 
-**Built with ❤️ for smart marketplace shopping**
+## Quick Start
+
+```bash
+# Clone and install
+git clone https://github.com/batterts/fb-marketplace-scout.git
+cd fb-marketplace-scout
+npm install
+
+# Start Scout (Docker)
+./scripts/scout.sh
+```
+
+**That's it!** Scout opens at http://localhost:3000
+
+---
+
+## Features
+
+- **🤖 Instant AI Evaluation** - Click any listing → Get scores immediately
+- **🚗 Vehicle Intelligence** - Auto-extract year/make/model + find comparables
+- **📊 Price Analytics** - Market analysis with distribution charts
+- **💾 Inventory Management** - Browse all scraped listings
+- **🐳 Docker Ready** - One command to start everything
+
+---
+
+## How It Works
+
+1. **Click "Launch Browser"** in web UI
+2. **Browse** Facebook Marketplace normally
+3. **Click any listing** → Instant evaluation overlay appears
+4. **View scores:** Flip Potential • Weirdness • Scam Risk
+5. **For vehicles:** Get comparable pricing automatically
+
+### Example Output
+
+```
+╔═════════════════════════════════╗
+║ 🤖 Marketplace Scout            ║
+├─────────────────────────────────┤
+║ Flip Potential:  ████████░░ 8/10║
+║ Weirdness:       ██████░░░░ 6/10║
+║ Scam Risk:       ██░░░░░░░░ 2/10║
+║                                 ║
+║ 2007 Mercedes-Benz SL 550       ║
+║ Asking: $3,000                  ║
+║ Market Median: $10,000          ║
+║ 17 comparables found            ║
+╚═════════════════════════════════╝
+```
+
+---
+
+## AI Modes
+
+Scout tries evaluation methods in this order:
+
+1. **Anthropic API** (Best) - Set `ANTHROPIC_API_KEY` env variable
+2. **Ollama** (Free, Local) - Runs automatically in Docker
+3. **Heuristic** (Instant) - Keyword-based, always works
+
+No configuration needed - it just works!
+
+---
+
+## Documentation
+
+- **[Complete Guide](docs/GUIDE.md)** - Full documentation
+- **[Changelog](CHANGELOG.md)** - Recent fixes and features
+- **[Architecture](docs/archive/ARCHITECTURE.md)** - Technical details
+
+---
+
+## Project Structure
+
+```
+fb-marketplace-scout/
+├── lib/                  # Core source code
+│   ├── scout-browser.js  # Browser automation
+│   ├── evaluator.js      # AI evaluation
+│   ├── web-server.js     # API server
+│   └── ...
+├── scripts/              # Utilities
+│   ├── scout.sh          # Main launcher
+│   └── init-database.js  # DB setup
+├── tests/                # Test scripts
+├── public/               # Web UI
+├── docs/                 # Documentation
+└── marketplace.db        # SQLite database
+```
+
+---
+
+## Requirements
+
+- **macOS** (for native browser launching)
+- **Docker Desktop** (or Node.js 18+ for native mode)
+- **Chrome/Chromium** (installed automatically by Puppeteer)
+
+### Docker Mode (Recommended)
+```bash
+./scripts/scout.sh
+```
+
+### Native Mode (Without Docker)
+```bash
+npm run init    # Initialize database
+npm start       # Start web server (port 3000)
+npm run browser # Launch browser
+```
+
+---
+
+## Commands
+
+```bash
+# Start Scout
+./scripts/scout.sh
+
+# Stop Scout
+docker compose down
+
+# Initialize database
+npm run init
+
+# Run tests
+node tests/test-extraction.js
+node tests/test-save-comparables.js
+
+# Check database
+sqlite3 marketplace.db "SELECT COUNT(*) FROM evaluations;"
+```
+
+---
+
+## Recent Updates
+
+### v2.0 (2026-01-31)
+
+✅ **Fixed:** Price display ($NaN → $3,000)  
+✅ **Fixed:** Make/model extraction (Mercedes-Benz SL 550)  
+✅ **New:** Comparable listings saved to inventory  
+✅ **New:** Docker-native browser integration  
+✅ **Improved:** Project structure and documentation  
+
+See [CHANGELOG.md](CHANGELOG.md) for details.
+
+---
+
+## Troubleshooting
+
+**Browser doesn't open**
+- Make sure Scout Agent is running: `ps aux | grep scout-agent`
+- Restart: `./scripts/scout.sh`
+
+**Overlay doesn't appear**
+- You must CLICK on a listing (not just browse)
+- Wait 3-5 seconds after clicking
+
+**Database errors**
+```bash
+docker compose down
+rm marketplace.db
+npm run init
+docker compose up -d
+```
+
+**Still stuck?** See [Complete Guide](docs/GUIDE.md#troubleshooting)
+
+---
+
+## How Comparable Pricing Works
+
+When you click a vehicle listing:
+
+1. Scout extracts: year, make, model, mileage
+2. Searches Facebook Marketplace (500mi radius)
+3. Finds 10-20 comparable listings
+4. Saves ALL of them to inventory
+5. Calculates median price
+6. Shows results in overlay + analytics tab
+
+**One click = 12+ vehicles added to your inventory!**
+
+---
+
+## Tech Stack
+
+- **Node.js 18** - Runtime
+- **Puppeteer** - Browser automation
+- **Express.js** - Web server
+- **SQLite3** - Database
+- **Ollama** - Local AI (optional)
+- **Anthropic Claude** - Cloud AI (optional)
+- **Docker** - Containerization
+
+---
+
+## License
+
+MIT License - See LICENSE file for details
+
+---
+
+## Contributing
+
+Contributions welcome! Please:
+1. Run tests before submitting
+2. Update documentation for new features
+3. Add entries to CHANGELOG.md
+
+---
+
+## Support
+
+**Questions or issues?**
+- Check the [Complete Guide](docs/GUIDE.md)
+- Review [CHANGELOG.md](CHANGELOG.md) for recent fixes
+- Open an issue on GitHub
+
+---
+
+**Built with ❤️ for smarter marketplace shopping**
+
+Happy Scouting! 🚀

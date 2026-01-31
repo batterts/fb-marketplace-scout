@@ -6,7 +6,8 @@
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 
-const DB_PATH = path.join(__dirname, 'marketplace.db');
+// Database is in project root (parent directory of scripts/)
+const DB_PATH = path.join(__dirname, '..', 'marketplace.db');
 
 console.log('🔄 Initializing database...\n');
 

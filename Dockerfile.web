@@ -57,4 +57,4 @@ COPY . .
 EXPOSE 3000
 
 # Start the web server
-CMD ["node", "web-server.js"]
+CMD ["node", "lib/web-server.js"]

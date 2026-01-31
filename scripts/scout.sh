@@ -17,8 +17,8 @@ echo "║  FB Marketplace Intelligence Platform ║"
 echo "╚═══════════════════════════════════════╝"
 echo -e "${NC}"
 
-# Change to script directory
-cd "$(dirname "$0")"
+# Change to project root (script is in scripts/ subdirectory)
+cd "$(dirname "$0")/.."
 
 # Check if Docker is installed
 if ! command -v docker &> /dev/null; then
@@ -108,7 +108,7 @@ echo ""
 
 # Start Scout Agent on host (for browser launching)
 echo -e "${BLUE}🤖 Starting Scout Agent (for browser launching)...${NC}"
-node scout-agent.js > scout-agent.log 2>&1 &
+node lib/scout-agent.js > scout-agent.log 2>&1 &
 AGENT_PID=$!
 echo $AGENT_PID > .scout-agent.pid
 echo -e "${GREEN}✅ Scout Agent running (PID: $AGENT_PID)${NC}"
