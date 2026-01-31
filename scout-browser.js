@@ -41,7 +41,7 @@ function getEvaluation(itemId) {
     console.log(`   🔍 [DB] Querying for itemId: ${itemId}`);
     db.get(`
       SELECT evaluated, flip_score, weirdness_score, scam_likelihood, notes
-      FROM listings
+      FROM evaluations
       WHERE listing_url LIKE ?
     `, [`%${itemId}%`], (err, row) => {
       db.close();
@@ -516,7 +516,7 @@ function getEvaluation(itemId) {
 
             // Save to database
             console.log(`   💾 Saving to database...`);
-            await saveEvaluation(itemId, scores, listingData.title, listingData.description);
+            await saveEvaluation(itemId, scores, listingData.title, listingData.description, listingData.price, listingData.location);
 
             // Refresh evaluation from database
             evaluation = await getEvaluation(itemId);

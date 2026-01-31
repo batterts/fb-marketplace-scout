@@ -794,55 +794,72 @@ async function evaluateListing(title, price, description, location, browser = nu
 }
 
 // Save evaluation to database
-function saveEvaluation(itemId, scores, title = null, description = null) {
+function saveEvaluation(itemId, scores, title = null, description = null, price = null, location = null) {
   return new Promise((resolve, reject) => {
     const db = new sqlite3.Database(DB_PATH);
 
     console.log(`   💾 [DB] Saving evaluation for itemId: ${itemId}`);
-    console.log(`   💾 [DB] Scores:`, JSON.stringify(scores));
 
-    // Try UPDATE first
-    db.run(`
-      UPDATE listings
-      SET evaluated = 1,
-          flip_score = ?,
-          weirdness_score = ?,
-          scam_likelihood = ?,
-          notes = ?,
-          title = COALESCE(?, title),
-          description = COALESCE(?, description)
-      WHERE listing_url LIKE ?
-    `, [scores.flip_score, scores.weirdness_score, scores.scam_likelihood, scores.notes, title, description, `%${itemId}%`], function(err) {
-      if (err) {
-        console.log(`   ❌ [DB] Update error: ${err.message}`);
-        db.close();
-        reject(err);
-        return;
+    const listingUrl = `https://www.facebook.com/marketplace/item/${itemId}/`;
+
+    // Extract vehicle info if it's a vehicle
+    const vehicleInfo = extractVehicleInfo(title);
+    let vehicleYear = null;
+    let vehicleMake = null;
+    let vehicleModel = null;
+    let vehicleMileage = null;
+
+    if (vehicleInfo.isVehicle && vehicleInfo.year && vehicleInfo.make) {
+      vehicleYear = vehicleInfo.year;
+      vehicleMake = vehicleInfo.make;
+      vehicleModel = vehicleInfo.model || null;
+
+      // Extract mileage from description
+      if (description) {
+        const mileageMatch = description.match(/(\d{1,3})[,\s]?(\d{3})\s*(miles|mi|k|km)/i) ||
+                            description.match(/(\d{1,3})k\s*(miles|mi)/i);
+        if (mileageMatch) {
+          if (mileageMatch[0].toLowerCase().includes('k')) {
+            vehicleMileage = `${mileageMatch[1]}K miles`;
+          } else {
+            vehicleMileage = `${mileageMatch[1]}${mileageMatch[2] || ''} miles`;
+          }
+        }
       }
 
-      console.log(`   ✅ [DB] Updated ${this.changes} row(s)`);
+      console.log(`   🚗 [DB] Vehicle detected: ${vehicleYear} ${vehicleMake} ${vehicleModel || ''}`);
+    }
 
-      // If no rows were updated, INSERT a new record
-      if (this.changes === 0) {
-        console.log(`   ⚠️  [DB] No existing record, inserting new one...`);
-
-        const listingUrl = `https://www.facebook.com/marketplace/item/${itemId}/`;
-
-        db.run(`
-          INSERT INTO listings (listing_url, title, description, evaluated, flip_score, weirdness_score, scam_likelihood, notes, discovered_at)
-          VALUES (?, ?, ?, 1, ?, ?, ?, ?, datetime('now'))
-        `, [listingUrl, title, description, scores.flip_score, scores.weirdness_score, scores.scam_likelihood, scores.notes], function(insertErr) {
-          db.close();
-          if (insertErr) {
-            console.log(`   ❌ [DB] Insert error: ${insertErr.message}`);
-            reject(insertErr);
-          } else {
-            console.log(`   ✅ [DB] Inserted new listing with ID: ${this.lastID}`);
-            resolve();
-          }
-        });
+    // Insert or replace into evaluations table
+    db.run(`
+      INSERT OR REPLACE INTO evaluations (
+        listing_url, title, price, description, location,
+        evaluated, flip_score, weirdness_score, scam_likelihood, notes,
+        vehicle_year, vehicle_make, vehicle_model, vehicle_mileage,
+        evaluated_at
+      )
+      VALUES (?, ?, ?, ?, ?, 1, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
+    `, [
+      listingUrl,
+      title,
+      price,
+      description,
+      location,
+      scores.flip_score,
+      scores.weirdness_score,
+      scores.scam_likelihood,
+      scores.notes,
+      vehicleYear,
+      vehicleMake,
+      vehicleModel,
+      vehicleMileage
+    ], function(err) {
+      db.close();
+      if (err) {
+        console.log(`   ❌ [DB] Save error: ${err.message}`);
+        reject(err);
       } else {
-        db.close();
+        console.log(`   ✅ [DB] Saved evaluation (ID: ${this.lastID})`);
         resolve();
       }
     });
